@@ -8,6 +8,7 @@ dependencies:
   - pandas
   - matplotlib
   - xarray
+  - pyarrow
 
   # Filesystem utils
   - pathy
@@ -17,3 +18,6 @@ dependencies:
   # Interactive data analysis
   - ipykernel
   - notebook # Required for running notebooks in VS Code
+
+  - pip:
+    - pvlive-api
