@@ -1,0 +1,19 @@
+name: analysis_of_pv_live
+channels:
+  - conda-forge
+dependencies:
+  - python
+
+  # Scientific Python
+  - pandas
+  - matplotlib
+  - xarray
+
+  # Filesystem utils
+  - pathy
+  - fsspec
+  - gcsfs
+
+  # Interactive data analysis
+  - ipykernel
+  - notebook # Required for running notebooks in VS Code
