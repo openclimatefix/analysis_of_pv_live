@@ -20,24 +20,24 @@ END_DATE: Final[datetime] = pytz.UTC.localize(datetime.utcnow())
 OUTPUT_PATH: Path = Path("/home/jack/data/PV/PV_Live/poll_API_every_15_minutes/")
 
 
-def download_all_gsps_from_pv_live(start: datetime, end: datetime) -> pd.Series:
-    series_for_all_gsps = []
+def download_all_gsps_from_pv_live(start: datetime, end: datetime) -> pd.DataFrame:
+    df_for_all_gsps = []
     pvl = PVLive()
     for gsp_id in pvl.gsp_ids:
         data_for_gsp = pvl.between(
-            start=start, end=end, entity_type="gsp", entity_id=gsp_id, dataframe=True)
-        data_for_gsp = data_for_gsp.set_index(["datetime_gmt", "gsp_id"]).generation_mw
-        series_for_all_gsps.append(data_for_gsp)
-    return pd.concat(series_for_all_gsps).sort_index()
+            start=start, end=end, entity_type="gsp", entity_id=gsp_id, dataframe=True, extra_fields="updated_gmt")
+        data_for_gsp = data_for_gsp.set_index(["datetime_gmt", "gsp_id"])
+        df_for_all_gsps.append(data_for_gsp)
+    return pd.concat(df_for_all_gsps).sort_index()
 
 
 
 if __name__ == "__main__":
     print("Downloading data from PV Live API...")
     date_str = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    series = download_all_gsps_from_pv_live(start=START_DATE, end=END_DATE)
+    df = download_all_gsps_from_pv_live(start=START_DATE, end=END_DATE)
     filename = "pvlive-{}.parquet".format(date_str)
     full_filename = OUTPUT_PATH / filename
     print(f"Saving to {full_filename}")
-    series.to_frame().to_parquet(full_filename, compression="brotli")
+    df.to_parquet(full_filename, compression="brotli")
     print("Done!")
