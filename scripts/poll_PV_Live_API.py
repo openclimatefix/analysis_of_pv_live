@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Final
 
+import numpy as np
 import pandas as pd
 import pytz
 from pvlive_api import PVLive
@@ -28,6 +29,7 @@ def download_all_gsps_from_pv_live(start: datetime, end: datetime) -> pd.DataFra
             start=start, end=end, entity_type="gsp", entity_id=gsp_id, dataframe=True,
             extra_fields="updated_gmt")
         data_for_gsp = data_for_gsp.set_index(["datetime_gmt", "gsp_id"])
+        data_for_gsp = data_for_gsp.astype({"generation_mw": np.float32})
         df_for_all_gsps.append(data_for_gsp)
     return pd.concat(df_for_all_gsps).sort_index()
 
