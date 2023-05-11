@@ -9,6 +9,7 @@ dependencies:
   - matplotlib
   - xarray
   - pyarrow
+  - zarr
 
   # Filesystem utils
   - pathy
